@@ -64,8 +64,8 @@ process ccs_calling {
 }
 
 process demux {
-    container "quay.io/biocontainers/lima:1.11.0--0"
-
+    // container "quay.io/biocontainers/lima:1.11.0--0"
+    conda "bioconda::lima"
     cpus 16
     clusterOptions "--mem=256 --parition=highmem -o ~/demux.log"
 
@@ -85,7 +85,6 @@ process demux {
         """
         lima \
             --isoseq \
-            --ccs \
             --dump-clips \
             --peek-guess \
             --num-threads ${task.cpus} \
@@ -99,8 +98,8 @@ process demux {
 }
 
 process refine {
-    // conda "bioconda::isoseq3"
-    container "quay.io/biocontainers/isoseq3:3.3.0--0"
+    conda "bioconda::isoseq3"
+    // container "quay.io/biocontainers/isoseq3:3.3.0--0"
 
     tag "Refining"
     publishDir "${params.refine}", mode: "copy", pattern: "*.flnc.bam", overwrite: true
@@ -129,8 +128,8 @@ process refine {
 }
 
 process cluster {
-    // conda "bioconda::isoseq3"
-    container "quay.io/biocontainers/isoseq3:3.3.0--0"
+    conda "bioconda::isoseq3"
+    // container "quay.io/biocontainers/isoseq3:3.3.0--0"
 
     tag "Clustering"
     publishDir "${params.unpolished}", mode: "copy", pattern: "*.bam", overwrite: true
@@ -351,7 +350,8 @@ process rename {
 
 process sqanti {
     tag "SQANTI3"
-    container "milescsmith/sqanti:1.3.11"
+    // container "milescsmith/sqanti:1.3.11"
+    conda "./sqanti3.yml"
 
     publishDir "${params.sqanti}", mode: "copy", pattern: "*.pdf", overwrite: true
     publishDir "${params.sqanti}", mode: "copy", pattern: "*.rep.params.txt", overwrite: true
